@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { Category, Handout } from './types';
-import { HANDOUTS } from './constants';
 import HandoutCard from './components/HandoutCard';
 import GeminiAssistant from './components/GeminiAssistant';
 import { AuthProvider, useAuth } from './components/AuthContext';
