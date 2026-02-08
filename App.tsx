@@ -141,7 +141,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 to={user && user.email === 'francoinvestimentoss@gmail.com' ? "/admin" : "/auth"}
-                className="hover:text-white transition-colors font-bold text-indigo-400 flex items-center gap-1"
+                className="hover:text-white transition-colors text-indigo-400 flex items-center gap-1"
               >
                 Administrador
                 {user && user.email === 'francoinvestimentoss@gmail.com' && (
