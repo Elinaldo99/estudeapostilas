@@ -5,7 +5,7 @@ const About: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <div className="bg-indigo-700 py-16 md:py-24 text-white">
-                <div className="container mx-auto px-4 text-center">
+                <div className="container mx-auto px-4 text-center max-w-7xl">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-6">Sobre Nós</h1>
                     <p className="text-xl opacity-90 max-w-2xl mx-auto font-light">
                         Nossa missão é democratizar o acesso à educação de qualidade através da disponibilização de materiais gratuitos.

@@ -4,7 +4,7 @@ const Terms: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-50">
             <div className="bg-white border-b border-slate-200 py-12 md:py-16">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 max-w-7xl">
                     <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4">Termos de Uso</h1>
                     <p className="text-slate-500 text-lg">Última atualização: Fevereiro de 2026</p>
                 </div>

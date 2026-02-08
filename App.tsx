@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 backdrop-blur-md bg-white/90">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto px-4 max-w-7xl h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
           <div className="bg-indigo-600 text-white p-1.5 rounded-lg">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,7 +202,7 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="bg-indigo-700 py-12 md:py-24 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-indigo-600/30 skew-x-12 transform translate-x-20 hidden md:block"></div>
-        <div className="container mx-auto px-4 relative z-10 text-center md:text-left">
+        <div className="container mx-auto px-4 relative z-10 text-center md:text-left max-w-7xl">
           <div className="max-w-2xl mx-auto md:mx-0">
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4 md:mb-6 leading-tight">
               A maior biblioteca de apostilas <span className="text-indigo-200">gratuitas</span> do Brasil.
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex flex-col md:flex-row gap-8">
 
           {/* Sidebar / Filters */}
