@@ -164,6 +164,7 @@ const Home: React.FC = () => {
   const [handouts, setHandouts] = useState<Handout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeHandout, setActiveHandout] = useState<Handout | null>(null);
+  const [showOnlineViewer, setShowOnlineViewer] = useState(false);
 
   useEffect(() => {
     const fetchHandouts = async () => {
@@ -366,11 +367,53 @@ const Home: React.FC = () => {
                   </svg>
                   Baixar PDF
                 </a>
-                <button className="w-full sm:w-auto px-6 py-3 md:py-4 bg-slate-100 text-slate-700 font-bold rounded-xl md:rounded-2xl hover:bg-slate-200 transition-all text-sm md:text-base">
+                <button
+                  onClick={() => setShowOnlineViewer(true)}
+                  className="w-full sm:w-auto px-6 py-3 md:py-4 bg-slate-100 text-slate-700 font-bold rounded-xl md:rounded-2xl hover:bg-slate-200 transition-all text-sm md:text-base"
+                >
                   Ler Online
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Online Viewer Modal */}
+      {showOnlineViewer && activeHandout && (
+        <div className="fixed inset-0 z-[60] flex flex-col bg-slate-900 animate-in fade-in duration-300">
+          <div className="h-16 flex items-center justify-between px-4 md:px-8 bg-slate-800 border-b border-slate-700 text-white shadow-lg">
+            <div className="flex items-center gap-4 truncate">
+              <button
+                onClick={() => setShowOnlineViewer(false)}
+                className="p-2 hover:bg-slate-700 rounded-full transition-colors"
+                title="Voltar"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </button>
+              <h3 className="font-bold truncate text-sm md:text-base">{activeHandout.title}</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="hidden md:inline text-xs text-slate-400 font-medium bg-slate-900 px-3 py-1 rounded-full">Visualização Online</span>
+              <button
+                onClick={() => setShowOnlineViewer(false)}
+                className="p-2 hover:bg-red-500 rounded-full transition-all group"
+                title="Fechar"
+              >
+                <svg className="w-6 h-6 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div className="flex-grow relative bg-slate-100">
+            <iframe
+              src={activeHandout.downloadUrl}
+              className="w-full h-full border-none shadow-inner"
+              title={activeHandout.title}
+            ></iframe>
           </div>
         </div>
       )}
