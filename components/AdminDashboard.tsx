@@ -15,6 +15,9 @@ const AdminDashboard: React.FC = () => {
         year: new Date().getFullYear(),
         rating: 5.0
     });
+    const [uploading, setUploading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     useEffect(() => {
         if (isAdmin) {
@@ -29,17 +32,43 @@ const AdminDashboard: React.FC = () => {
         setIsLoading(false);
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setUploading(true);
         try {
+            let thumbnailUrl = currentHandout.thumbnail;
+
+            if (selectedFile) {
+                thumbnailUrl = await handoutService.uploadThumbnail(selectedFile);
+            }
+
+            const handoutToSave = {
+                ...currentHandout,
+                thumbnail: thumbnailUrl
+            };
+
             if (currentHandout.id) {
-                await handoutService.updateHandout(currentHandout.id, currentHandout);
+                await handoutService.updateHandout(currentHandout.id, handoutToSave);
                 alert('Material atualizado com sucesso!');
             } else {
-                await handoutService.createHandout(currentHandout as Omit<Handout, 'id'>);
+                await handoutService.createHandout(handoutToSave as Omit<Handout, 'id'>);
                 alert('Material criado com sucesso!');
             }
             setIsEditing(false);
+            setSelectedFile(null);
+            setPreviewUrl(null);
             setCurrentHandout({
                 category: Category.CONCURSOS,
                 pages: 0,
@@ -49,11 +78,14 @@ const AdminDashboard: React.FC = () => {
             loadHandouts();
         } catch (error) {
             alert('Erro ao salvar material.');
+        } finally {
+            setUploading(false);
         }
     };
 
     const handleEdit = (handout: Handout) => {
         setCurrentHandout(handout);
+        setPreviewUrl(handout.thumbnail);
         setIsEditing(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -161,14 +193,57 @@ const AdminDashboard: React.FC = () => {
                                 />
                             </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Link da Miniatura (URL)</label>
-                            <input
-                                value={currentHandout.thumbnail || ''}
-                                onChange={e => setCurrentHandout({ ...currentHandout, thumbnail: e.target.value })}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
-                                placeholder="https://exemplo.com/imagem.jpg"
-                            />
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Capa do Material (Foto)</label>
+                            <div className="flex flex-col md:flex-row gap-6 items-start">
+                                <div className="w-full md:w-1/3 aspect-[3/4] bg-slate-100 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden relative group">
+                                    {previewUrl ? (
+                                        <>
+                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setSelectedFile(null); setPreviewUrl(null); setCurrentHandout({ ...currentHandout, thumbnail: '' }); }}
+                                                    className="bg-white text-red-600 p-2 rounded-xl font-bold text-xs"
+                                                >
+                                                    Remover
+                                                </button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center p-4">
+                                            <svg className="w-12 h-12 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            <p className="text-xs text-slate-400">Arraste ou clique para enviar</p>
+                                        </div>
+                                    )}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                    />
+                                </div>
+                                <div className="flex-grow space-y-4">
+                                    <p className="text-sm text-slate-500 leading-relaxed">
+                                        Recomendamos imagens verticais (proporção 3:4) para melhor visualização.
+                                        Se preferir, você ainda pode inserir uma URL manualmente abaixo.
+                                    </p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-400 mb-1">URL da Miniatura (Opcional)</label>
+                                        <input
+                                            value={currentHandout.thumbnail || ''}
+                                            onChange={e => {
+                                                setCurrentHandout({ ...currentHandout, thumbnail: e.target.value });
+                                                setPreviewUrl(e.target.value);
+                                            }}
+                                            className="w-full px-4 py-2 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                            placeholder="https://exemplo.com/imagem.jpg"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-2">Link de Download (URL)</label>
@@ -200,9 +275,10 @@ const AdminDashboard: React.FC = () => {
                             )}
                             <button
                                 type="submit"
-                                className="px-12 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
+                                disabled={uploading}
+                                className="px-12 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50"
                             >
-                                {isEditing ? 'Salvar Alterações' : 'Adicionar Material'}
+                                {uploading ? 'Enviando...' : (isEditing ? 'Salvar Alterações' : 'Adicionar Material')}
                             </button>
                         </div>
                     </form>

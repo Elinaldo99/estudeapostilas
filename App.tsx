@@ -138,17 +138,6 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="text-white font-bold mb-4">Plataforma</h4>
           <ul className="space-y-2 text-sm">
-            <li>
-              <Link
-                to={user && user.email === 'francoinvestimentoss@gmail.com' ? "/admin" : "/auth"}
-                className="hover:text-white transition-colors text-indigo-400 flex items-center gap-1"
-              >
-                Administrador
-                {user && user.email === 'francoinvestimentoss@gmail.com' && (
-                  <span className="text-[10px] bg-indigo-500/20 px-1.5 py-0.5 rounded uppercase font-bold">On</span>
-                )}
-              </Link>
-            </li>
             <li><Link to="/sobre" className="hover:text-white transition-colors">Sobre Nós</Link></li>
             <li><Link to="/termos" className="hover:text-white transition-colors">Termos de Uso</Link></li>
             <li><Link to="/privacidade" className="hover:text-white transition-colors">Privacidade</Link></li>

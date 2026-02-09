@@ -90,5 +90,26 @@ export const handoutService = {
             console.error('Error deleting handout:', error);
             throw error;
         }
+    },
+
+    async uploadThumbnail(file: File): Promise<string> {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `thumbnails/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('materials')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error('Error uploading thumbnail:', uploadError);
+            throw uploadError;
+        }
+
+        const { data } = supabase.storage
+            .from('materials')
+            .getPublicUrl(filePath);
+
+        return data.publicUrl;
     }
 };
