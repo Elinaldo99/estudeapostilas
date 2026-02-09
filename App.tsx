@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { Category, Handout, SubCategory } from './types';
 import HandoutCard from './components/HandoutCard';
-import GeminiAssistant from './components/GeminiAssistant';
+
 import { AuthProvider, useAuth } from './components/AuthContext';
 import Auth from './components/Auth';
 import AdminDashboard from './components/AdminDashboard';
@@ -238,7 +238,7 @@ const Home: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-8">
 
           {/* Sidebar / Filters */}
-          <aside className="w-full md:w-64 space-y-6">
+          <aside className="w-full md:w-80 space-y-6">
             <div>
               <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,63 +246,70 @@ const Home: React.FC = () => {
                 </svg>
                 Categorias
               </h3>
-              <div className="flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide no-scrollbar">
+              <div className="flex flex-col gap-3">
                 {['Todos', ...Object.values(Category)].map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat as any);
-                      setSelectedSubCategory('Todos');
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm text-left whitespace-nowrap transition-all ${selectedCategory === cat
-                      ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-200'
-                      : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-100 md:border-transparent'
-                      }`}
-                  >
-                    {cat}
-                  </button>
+                  <div key={cat} className="flex flex-col">
+                    <button
+                      onClick={() => {
+                        setSelectedCategory(cat as any);
+                        setSelectedSubCategory('Todos');
+                      }}
+                      className={`px-5 py-3.5 rounded-2xl text-sm text-left transition-all flex items-center justify-between group ${selectedCategory === cat
+                        ? 'bg-indigo-600 text-white font-bold shadow-xl shadow-indigo-100'
+                        : 'bg-white text-slate-600 hover:bg-slate-100 hover:shadow-md border border-slate-100'
+                        }`}
+                    >
+                      <span className="flex items-center gap-3 overflow-hidden group-hover:translate-x-1 transition-transform duration-200">
+                        {cat === 'Todos' ? (
+                          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                          </svg>
+                        ) : (
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${selectedCategory === cat ? 'bg-white scale-110' : 'opacity-0'}`} />
+                        )}
+                        <span className="whitespace-nowrap">{cat}</span>
+                      </span>
+                      {cat !== 'Todos' && subcategories.some(s => s.category === cat) && (
+                        <svg className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${selectedCategory === cat ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      )}
+                    </button>
+
+                    {/* Subcategories Accordion */}
+                    {selectedCategory === cat && cat !== 'Todos' && subcategories.filter(s => s.category === cat).length > 0 && (
+                      <div className="mt-2 ml-4 pl-5 border-l-2 border-slate-100 flex flex-col gap-1 py-1 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <button
+                          onClick={() => setSelectedSubCategory('Todos')}
+                          className={`px-4 py-2.5 rounded-xl text-xs text-left transition-all ${selectedSubCategory === 'Todos'
+                            ? 'text-indigo-600 font-bold bg-indigo-50 shadow-sm'
+                            : 'text-slate-500 hover:bg-slate-50'
+                            }`}
+                        >
+                          • Ver Todas
+                        </button>
+                        {subcategories
+                          .filter(sub => sub.category === cat)
+                          .map(sub => (
+                            <button
+                              key={sub.id}
+                              onClick={() => setSelectedSubCategory(sub.id)}
+                              className={`px-4 py-2.5 rounded-xl text-xs text-left transition-all ${selectedSubCategory === sub.id
+                                ? 'text-indigo-600 font-bold bg-indigo-50 shadow-sm'
+                                : 'text-slate-500 hover:bg-slate-50'
+                                }`}
+                            >
+                              • {sub.name}
+                            </button>
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
 
-            {selectedCategory !== 'Todos' && subcategories.filter(s => s.category === selectedCategory).length > 0 && (
-              <div>
-                <h3 className="text-sm font-bold text-slate-400 mb-3 uppercase tracking-wider">Subcategorias</h3>
-                <div className="flex flex-row md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide no-scrollbar">
-                  <button
-                    onClick={() => setSelectedSubCategory('Todos')}
-                    className={`px-4 py-1.5 rounded-lg text-xs text-left whitespace-nowrap transition-all ${selectedSubCategory === 'Todos'
-                      ? 'bg-indigo-50 text-indigo-700 font-bold'
-                      : 'text-slate-500 hover:bg-slate-50'
-                      }`}
-                  >
-                    Todas as subcategorias
-                  </button>
-                  {subcategories
-                    .filter(sub => sub.category === selectedCategory)
-                    .map(sub => (
-                      <button
-                        key={sub.id}
-                        onClick={() => setSelectedSubCategory(sub.id)}
-                        className={`px-4 py-1.5 rounded-lg text-xs text-left whitespace-nowrap transition-all ${selectedSubCategory === sub.id
-                          ? 'bg-indigo-50 text-indigo-700 font-bold'
-                          : 'text-slate-500 hover:bg-slate-50'
-                          }`}
-                      >
-                        {sub.name}
-                      </button>
-                    ))}
-                </div>
-              </div>
-            )}
 
-            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-indigo-100 hidden md:block">
-              <h4 className="font-bold text-indigo-900 mb-2">Novo por aqui?</h4>
-              <p className="text-xs text-indigo-700 leading-relaxed mb-4">
-                Use nosso Assistente Virtual para criar seu cronograma de estudos personalizado baseado nos materiais disponíveis.
-              </p>
-              <button className="text-xs font-bold text-indigo-600 hover:underline">Saiba mais &rarr;</button>
-            </div>
           </aside>
 
           {/* Handout Grid Area */}
@@ -353,7 +360,7 @@ const Home: React.FC = () => {
         </div>
       </main>
 
-      <GeminiAssistant />
+
       <Footer />
 
       {/* Handout Modal */}
