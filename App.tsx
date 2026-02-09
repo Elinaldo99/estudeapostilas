@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
-import { Category, Handout } from './types';
+import { Category, Handout, SubCategory } from './types';
 import HandoutCard from './components/HandoutCard';
 import GeminiAssistant from './components/GeminiAssistant';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import Auth from './components/Auth';
 import AdminDashboard from './components/AdminDashboard';
 import { handoutService } from './services/handoutService';
+import { subcategoryService } from './services/subcategoryService';
 import About from './components/About';
 import Terms from './components/Terms';
 import Privacy from './components/Privacy';
@@ -160,30 +161,42 @@ const Footer: React.FC = () => {
 // Home Page
 const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | 'Todos'>('Todos');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | 'Todos'>('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [handouts, setHandouts] = useState<Handout[]>([]);
+  const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeHandout, setActiveHandout] = useState<Handout | null>(null);
   const [showOnlineViewer, setShowOnlineViewer] = useState(false);
 
   useEffect(() => {
-    const fetchHandouts = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
-      const data = await handoutService.getHandouts();
-      setHandouts(data);
-      setIsLoading(false);
+      try {
+        const [handoutsData, subcategoriesData] = await Promise.all([
+          handoutService.getHandouts(),
+          subcategoryService.getSubCategories()
+        ]);
+        setHandouts(handoutsData);
+        setSubcategories(subcategoriesData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    fetchHandouts();
+    fetchData();
   }, []);
 
   const filteredHandouts = useMemo(() => {
     return handouts.filter(handout => {
       const matchesCategory = selectedCategory === 'Todos' || handout.category === selectedCategory;
+      const matchesSubCategory = selectedSubCategory === 'Todos' || handout.subcategory_id === selectedSubCategory;
       const matchesSearch = handout.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         handout.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesSubCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery, handouts]);
+  }, [selectedCategory, selectedSubCategory, searchQuery, handouts]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -237,7 +250,10 @@ const Home: React.FC = () => {
                 {['Todos', ...Object.values(Category)].map(cat => (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat as any)}
+                    onClick={() => {
+                      setSelectedCategory(cat as any);
+                      setSelectedSubCategory('Todos');
+                    }}
                     className={`px-4 py-2 rounded-lg text-sm text-left whitespace-nowrap transition-all ${selectedCategory === cat
                       ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-200'
                       : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-100 md:border-transparent'
@@ -248,6 +264,37 @@ const Home: React.FC = () => {
                 ))}
               </div>
             </div>
+
+            {selectedCategory !== 'Todos' && subcategories.filter(s => s.category === selectedCategory).length > 0 && (
+              <div>
+                <h3 className="text-sm font-bold text-slate-400 mb-3 uppercase tracking-wider">Subcategorias</h3>
+                <div className="flex flex-row md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide no-scrollbar">
+                  <button
+                    onClick={() => setSelectedSubCategory('Todos')}
+                    className={`px-4 py-1.5 rounded-lg text-xs text-left whitespace-nowrap transition-all ${selectedSubCategory === 'Todos'
+                      ? 'bg-indigo-50 text-indigo-700 font-bold'
+                      : 'text-slate-500 hover:bg-slate-50'
+                      }`}
+                  >
+                    Todas as subcategorias
+                  </button>
+                  {subcategories
+                    .filter(sub => sub.category === selectedCategory)
+                    .map(sub => (
+                      <button
+                        key={sub.id}
+                        onClick={() => setSelectedSubCategory(sub.id)}
+                        className={`px-4 py-1.5 rounded-lg text-xs text-left whitespace-nowrap transition-all ${selectedSubCategory === sub.id
+                          ? 'bg-indigo-50 text-indigo-700 font-bold'
+                          : 'text-slate-500 hover:bg-slate-50'
+                          }`}
+                      >
+                        {sub.name}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
 
             <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-indigo-100 hidden md:block">
               <h4 className="font-bold text-indigo-900 mb-2">Novo por aqui?</h4>
@@ -263,7 +310,12 @@ const Home: React.FC = () => {
             <section className="mb-12">
               <div className="flex justify-between items-center mb-10">
                 <h2 className="text-2xl font-bold text-slate-900">
-                  {selectedCategory === 'Todos' ? 'Materiais Recentes' : `Apostilas de ${selectedCategory}`}
+                  {selectedCategory === 'Todos'
+                    ? 'Materiais Recentes'
+                    : selectedSubCategory === 'Todos'
+                      ? `Apostilas de ${selectedCategory}`
+                      : `${selectedCategory} > ${subcategories.find(s => s.id === selectedSubCategory)?.name}`
+                  }
                 </h2>
                 <div className="text-sm font-medium text-slate-500">Exibindo {filteredHandouts.length} itens</div>
               </div>
@@ -289,7 +341,7 @@ const Home: React.FC = () => {
                   <h3 className="text-lg font-bold text-slate-900 mb-1">Nenhum material encontrado</h3>
                   <p className="text-slate-500 mb-6">Tente ajustar seus filtros ou busca.</p>
                   <button
-                    onClick={() => { setSelectedCategory('Todos'); setSearchQuery(''); }}
+                    onClick={() => { setSelectedCategory('Todos'); setSelectedSubCategory('Todos'); setSearchQuery(''); }}
                     className="text-indigo-600 font-bold hover:underline"
                   >
                     Limpar todos os filtros
@@ -330,7 +382,7 @@ const Home: React.FC = () => {
               </button>
               <div className="mb-4 md:mb-6">
                 <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider mb-2 md:mb-3 inline-block">
-                  {activeHandout.category}
+                  {activeHandout.category} {activeHandout.subCategory && `> ${activeHandout.subCategory.name}`}
                 </span>
                 <h2 className="text-xl md:text-3xl font-extrabold text-slate-800 mb-1 md:mb-2 leading-tight">
                   {activeHandout.title}

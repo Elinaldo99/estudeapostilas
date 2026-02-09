@@ -9,10 +9,19 @@ export enum Category {
   GENERAL = 'Geral'
 }
 
+export interface SubCategory {
+  id: string;
+  name: string;
+  category: Category;
+  created_at?: string;
+}
+
 export interface Handout {
   id: string;
   title: string;
   category: Category;
+  subCategory?: SubCategory;
+  subcategory_id?: string;
   description: string;
   author: string;
   pages: number;

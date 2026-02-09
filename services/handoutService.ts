@@ -5,7 +5,7 @@ export const handoutService = {
     async getHandouts(): Promise<Handout[]> {
         const { data, error } = await supabase
             .from('handouts')
-            .select('*')
+            .select('*, subcategories(*)')
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -17,6 +17,12 @@ export const handoutService = {
             id: item.id,
             title: item.title,
             category: item.category as Category,
+            subCategory: item.subcategories ? {
+                id: item.subcategories.id,
+                name: item.subcategories.name,
+                category: item.subcategories.category as Category
+            } : undefined,
+            subcategory_id: item.subcategory_id,
             description: item.description || '',
             author: item.author || '',
             pages: item.pages || 0,
@@ -33,6 +39,7 @@ export const handoutService = {
             .insert([{
                 title: handout.title,
                 category: handout.category,
+                subcategory_id: handout.subcategory_id,
                 description: handout.description,
                 author: handout.author,
                 pages: handout.pages,
@@ -61,6 +68,7 @@ export const handoutService = {
         const updateData: any = {};
         if (handout.title) updateData.title = handout.title;
         if (handout.category) updateData.category = handout.category;
+        if (handout.subcategory_id !== undefined) updateData.subcategory_id = handout.subcategory_id;
         if (handout.description !== undefined) updateData.description = handout.description;
         if (handout.author !== undefined) updateData.author = handout.author;
         if (handout.pages !== undefined) updateData.pages = handout.pages;
