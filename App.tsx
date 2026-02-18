@@ -12,7 +12,7 @@ import About from './components/About';
 import Terms from './components/Terms';
 import Privacy from './components/Privacy';
 
-// Navbar Component
+// Navbar Componente 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
