@@ -11,6 +11,7 @@ import { subcategoryService } from './services/subcategoryService';
 import About from './components/About';
 import Terms from './components/Terms';
 import Privacy from './components/Privacy';
+import CookieConsent from './components/CookieConsent';
 
 // Navbar Componente 
 const Navbar: React.FC = () => {
@@ -492,6 +493,7 @@ const App: React.FC = () => {
           <Route path="/privacidade" element={<Privacy />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
+        <CookieConsent />
       </HashRouter>
     </AuthProvider>
   );
