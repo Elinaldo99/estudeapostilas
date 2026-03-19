@@ -198,7 +198,7 @@ const AdminDashboard: React.FC = () => {
                                         value={currentHandout.title || ''}
                                         onChange={e => setCurrentHandout({ ...currentHandout, title: e.target.value })}
                                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
-                                        placeholder="Ex: Matemática Zero para Concursos"
+                                        placeholder="Ex: Matemática Zero Concursos"
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
