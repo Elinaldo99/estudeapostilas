@@ -12,6 +12,7 @@ import About from './components/About';
 import Terms from './components/Terms';
 import Privacy from './components/Privacy';
 import CookieConsent from './components/CookieConsent';
+import AdsterraBanner from './components/AdsterraBanner';
 
 // Navbar Componente 
 const Navbar: React.FC = () => {
@@ -234,6 +235,11 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Adsterra Banner 468x60 */}
+      <div className="container mx-auto px-4 pt-4 max-w-7xl flex justify-center">
+        <AdsterraBanner adKey="554363e18b230a28870ba8ba684a1f72" width={468} height={60} />
+      </div>
+
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex flex-col md:flex-row gap-8">
@@ -311,6 +317,11 @@ const Home: React.FC = () => {
             </div>
 
 
+          
+            {/* Sidebar Adsterra Banner 300x250 */}
+            <div className="pt-4 flex justify-center">
+              <AdsterraBanner adKey="9410653befab86acb4df16fda5058f86" width={300} height={250} />
+            </div>
           </aside>
 
           {/* Handout Grid Area */}
