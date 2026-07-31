@@ -13,6 +13,7 @@ import Terms from './components/Terms';
 import Privacy from './components/Privacy';
 import CookieConsent from './components/CookieConsent';
 import AdsterraBanner from './components/AdsterraBanner';
+import AdsterraNative from './components/AdsterraNative';
 
 // Navbar Componente 
 const Navbar: React.FC = () => {
@@ -170,6 +171,8 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeHandout, setActiveHandout] = useState<Handout | null>(null);
   const [showOnlineViewer, setShowOnlineViewer] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 24; // 6 rows x 4 cols
 
   useEffect(() => {
     const fetchData = async () => {
@@ -199,6 +202,14 @@ const Home: React.FC = () => {
       return matchesCategory && matchesSubCategory && matchesSearch;
     });
   }, [selectedCategory, selectedSubCategory, searchQuery, handouts]);
+
+  const totalPages = Math.ceil(filteredHandouts.length / ITEMS_PER_PAGE);
+  const paginatedHandouts = filteredHandouts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  // Reset to page 1 when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedSubCategory, searchQuery]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -322,6 +333,16 @@ const Home: React.FC = () => {
             <div className="pt-4 flex justify-center">
               <AdsterraBanner adKey="9410653befab86acb4df16fda5058f86" width={300} height={250} />
             </div>
+            {/* Sidebar Adsterra Banner 160x300 */}
+            <div className="pt-4 flex justify-center hidden md:flex">
+              <AdsterraBanner adKey="a22322b300b8f2f95ff8f54aded1c816" width={160} height={300} />
+            </div>
+
+            {/* Sidebar Adsterra Wide Skyscraper 160x600 */}
+            <div className="pt-4 flex justify-center hidden md:flex">
+              <AdsterraBanner adKey="a2757ba945349673e5f82d72564c52fb" width={160} height={600} />
+            </div>
+
           </aside>
 
           {/* Handout Grid Area */}
@@ -336,7 +357,7 @@ const Home: React.FC = () => {
                       : `${selectedCategory} > ${subcategories.find(s => s.id === selectedSubCategory)?.name}`
                   }
                 </h2>
-                <div className="text-sm font-medium text-slate-500">Exibindo {filteredHandouts.length} itens</div>
+                <div className="text-sm font-medium text-slate-500">{filteredHandouts.length} itens • Página {currentPage} de {totalPages || 1}</div>
               </div>
 
               {isLoading ? (
@@ -346,7 +367,7 @@ const Home: React.FC = () => {
                 </div>
               ) : filteredHandouts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {filteredHandouts.map(handout => (
+                  {paginatedHandouts.map(handout => (
                     <HandoutCard key={handout.id} handout={handout} onClick={setActiveHandout} />
                   ))}
                 </div>
@@ -367,11 +388,78 @@ const Home: React.FC = () => {
                   </button>
                 </div>
               )}
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
+                  {/* Previous Button */}
+                  <button
+                    onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Anterior
+                  </button>
+
+                  {/* Page Numbers */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 2)
+                    .reduce((acc: (number | string)[], page, idx, arr) => {
+                      if (idx > 0 && (page as number) - (arr[idx - 1] as number) > 1) acc.push('...');
+                      acc.push(page);
+                      return acc;
+                    }, [])
+                    .map((item, idx) =>
+                      item === '...' ? (
+                        <span key={`ellipsis-${idx}`} className="px-2 py-2.5 text-slate-400 text-sm font-bold select-none">...</span>
+                      ) : (
+                        <button
+                          key={item}
+                          onClick={() => { setCurrentPage(item as number); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${currentPage === item
+                            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
+                            : 'border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200'
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      )
+                    )
+                  }
+
+                  {/* Next Button */}
+                  <button
+                    onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    Próximo
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+              {/* Adsterra Native Banner - abaixo da grade */}
+              <div className="mt-10">
+                <AdsterraNative
+                  containerId="container-46c435b51242ee945d40773aa70c38c1"
+                  scriptSrc="https://pl30613296.effectivecpmnetwork.com/46c435b51242ee945d40773aa70c38c1/invoke.js"
+                />
+              </div>
             </section>
           </div>
         </div>
       </main>
 
+
+      {/* Adsterra Leaderboard 728x90 - before footer */}
+      <div className="container mx-auto px-4 py-6 max-w-7xl flex justify-center hidden md:flex">
+        <AdsterraBanner adKey="799f03d27ecbc7a41bdca3338a404967" width={728} height={90} />
+      </div>
 
       <Footer />
 
