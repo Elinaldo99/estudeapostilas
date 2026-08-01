@@ -1,6 +1,6 @@
 
 export enum Category {
-  CONCURSOS = 'Concursos',
+  PORTUGUÊS = 'Português',
   GRADUACAO = 'Graduação',
   TECNICO = 'Técnico',
   IDIOMAS = 'Idiomas',
