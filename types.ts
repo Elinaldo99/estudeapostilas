@@ -10,6 +10,13 @@ export enum Category {
   DIREITO_CIVIL = 'Direito Civil',
   DIREITO_CONSTITUCIONAL = 'Direito Constitucional',
   DIREITO_MILITAR = 'Direito Militar',
+  DIREITO_PENAL = 'Direito Penal',
+  DIREITO_PREVIDENCIARIO = 'Direito Previdenciário',
+  DIREITO_PROCESSUAL_CIVIL = 'Direito Processual Civil',
+  DIREITO_PROCESSUAL_PENAL = 'Direito Processual Penal',
+  DIREITOS_HUMANOS = 'Direitos Humanos',
+  ECA_ESTATUTO_DA_CRIANCA_E_ADOLECENTE = 'ECA - Estatuto da Criança e do Adolescente',
+  ECONOMIA = 'Economia',
   GENERAL = 'Geral'
 }
 
