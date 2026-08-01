@@ -1,6 +1,6 @@
 
 export enum Category {
-  PORTUGUÊS = 'Português',
+  ADMINISTRACAO_GERAL = 'Administração Geral',
   GRADUACAO = 'Graduação',
   TECNICO = 'Técnico',
   IDIOMAS = 'Idiomas',
