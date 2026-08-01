@@ -1,11 +1,15 @@
 
 export enum Category {
   ADMINISTRACAO_GERAL = 'Administração Geral',
-  GRADUACAO = 'Graduação',
-  TECNICO = 'Técnico',
-  IDIOMAS = 'Idiomas',
-  VESTIBULAR = 'Vestibular',
-  TI = 'Tecnologia da Informação',
+  ADMINISTRACAO_PUBLICA = 'Administração Pública',
+  ARQUIVOLOGIA = 'Arquivologia',
+  CONHECIMENTOS_BANCARIOS = 'Conhecimentos Bancários',
+  CONTABILIDADE = 'Contabilidade',
+  CTB_LEGISLACAO_DE_TRANSITO = 'CTB de Legislação de Trânsito',
+  DIREITO_ADMINISTRATIVO = 'Direito Administrativo',
+  DIREITO_CIVIL = 'Direito Civil',
+  DIREITO_CONSTITUCIONAL = 'Direito Constitucional',
+  DIREITO_MILITAR = 'Direito Militar',
   GENERAL = 'Geral'
 }
 
