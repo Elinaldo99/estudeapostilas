@@ -17,6 +17,21 @@ export enum Category {
   DIREITOS_HUMANOS = 'Direitos Humanos',
   ECA_ESTATUTO_DA_CRIANCA_E_ADOLECENTE = 'ECA - Estatuto da Criança e do Adolescente',
   ECONOMIA = 'Economia',
+  ENFERMAGEM = 'Enfermagem',
+  ESPANHOL = 'Espanhol',
+  ESTATISTICA = 'Estatística',
+  FISICA = 'Física',
+  GEOGRAFIA = 'Geografia',
+  HISTORIA = 'História',
+  INFORMATICA = 'Informática',
+  INGLES = 'Inglês',
+  LEGISLACAO_EXTRAVAGANTE = 'Legislação Extravagante',
+  MATEMATICA = 'Matemática',
+  PEDAGOGIA = 'Pedagogia',
+  PORTUGUES = 'Português',
+  QUIMICA = 'Química',
+  RLM_RACIOCINIO_LOGICO = 'RLM - Raciocínio Lógico',
+  SUS_SISTEMA_UNICO_DE_SAUDE = 'SUS - Sistema Único de Saúde',
   GENERAL = 'Geral'
 }
 
