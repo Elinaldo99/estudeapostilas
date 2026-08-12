@@ -269,7 +269,11 @@ const Home: React.FC = () => {
                   <div key={cat} className="flex flex-col">
                     <button
                       onClick={() => {
-                        setSelectedCategory(cat as any);
+                        if (selectedCategory === cat) {
+                          setSelectedCategory('Todos');
+                        } else {
+                          setSelectedCategory(cat as any);
+                        }
                         setSelectedSubCategory('Todos');
                       }}
                       className={`px-5 py-3.5 rounded-2xl text-sm text-left transition-all flex items-center justify-between group ${selectedCategory === cat
