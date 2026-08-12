@@ -93,8 +93,9 @@ const AdminDashboard: React.FC = () => {
                 rating: 5.0
             });
             loadData();
-        } catch (error) {
-            alert('Erro ao salvar material.');
+        } catch (error: any) {
+            console.error(error);
+            alert('Erro ao salvar material: ' + (error.message || 'Erro desconhecido'));
         } finally {
             setUploading(false);
         }
@@ -113,8 +114,9 @@ const AdminDashboard: React.FC = () => {
             setIsSubEditing(false);
             setCurrentSubCategory({ category: Category.CONCURSOS, name: '' });
             loadData();
-        } catch (error) {
-            alert('Erro ao salvar subcategoria.');
+        } catch (error: any) {
+            console.error(error);
+            alert('Erro ao salvar subcategoria: ' + (error.message || 'Erro desconhecido'));
         }
     };
 
