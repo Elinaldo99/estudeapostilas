@@ -39,7 +39,7 @@ export const handoutService = {
             .insert([{
                 title: handout.title,
                 category: handout.category,
-                subcategory_id: handout.subcategory_id,
+                subcategory_id: handout.subcategory_id || null,
                 description: handout.description,
                 author: handout.author,
                 pages: handout.pages,
@@ -68,7 +68,7 @@ export const handoutService = {
         const updateData: any = {};
         if (handout.title) updateData.title = handout.title;
         if (handout.category) updateData.category = handout.category;
-        if (handout.subcategory_id !== undefined) updateData.subcategory_id = handout.subcategory_id;
+        if (handout.subcategory_id !== undefined) updateData.subcategory_id = handout.subcategory_id || null;
         if (handout.description !== undefined) updateData.description = handout.description;
         if (handout.author !== undefined) updateData.author = handout.author;
         if (handout.pages !== undefined) updateData.pages = handout.pages;
