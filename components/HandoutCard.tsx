@@ -21,9 +21,6 @@ const HandoutCard: React.FC<HandoutCardProps> = ({ handout, onClick }) => {
         />
         <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg flex gap-1">
           <span>{handout.category}</span>
-          {handout.subCategory && (
-            <span className="opacity-80 font-normal">| {handout.subCategory.name}</span>
-          )}
         </div>
       </div>
       <div className="p-4 flex flex-col flex-grow">

@@ -164,6 +164,7 @@ const Footer: React.FC = () => {
 // Home Page
 const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | 'Todos'>('Todos');
+  const [expandedCategory, setExpandedCategory] = useState<Category | 'Todos' | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | 'Todos'>('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [handouts, setHandouts] = useState<Handout[]>([]);
@@ -269,10 +270,11 @@ const Home: React.FC = () => {
                   <div key={cat} className="flex flex-col">
                     <button
                       onClick={() => {
-                        if (selectedCategory === cat) {
-                          setSelectedCategory('Todos');
+                        setSelectedCategory(cat as any);
+                        if (expandedCategory === cat) {
+                          setExpandedCategory(null);
                         } else {
-                          setSelectedCategory(cat as any);
+                          setExpandedCategory(cat as any);
                         }
                         setSelectedSubCategory('Todos');
                       }}
@@ -292,14 +294,14 @@ const Home: React.FC = () => {
                         <span className="whitespace-nowrap">{cat}</span>
                       </span>
                       {cat !== 'Todos' && subcategories.some(s => s.category === cat) && (
-                        <svg className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${selectedCategory === cat ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${expandedCategory === cat ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       )}
                     </button>
 
                     {/* Subcategories Accordion */}
-                    {selectedCategory === cat && cat !== 'Todos' && subcategories.filter(s => s.category === cat).length > 0 && (
+                    {expandedCategory === cat && cat !== 'Todos' && subcategories.filter(s => s.category === cat).length > 0 && (
                       <div className="mt-2 ml-4 pl-5 border-l-2 border-slate-100 flex flex-col gap-1 py-1 animate-in fade-in slide-in-from-top-2 duration-300">
                         <button
                           onClick={() => setSelectedSubCategory('Todos')}
