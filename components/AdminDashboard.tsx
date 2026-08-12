@@ -13,13 +13,13 @@ const AdminDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'handouts' | 'subcategories'>('handouts');
     const [isEditing, setIsEditing] = useState(false);
     const [currentHandout, setCurrentHandout] = useState<Partial<Handout>>({
-        category: Category.CONCURSOS,
+        category: Category.GENERAL,
         pages: 0,
         year: new Date().getFullYear(),
         rating: 5.0
     });
     const [currentSubCategory, setCurrentSubCategory] = useState<Partial<SubCategory>>({
-        category: Category.CONCURSOS,
+        category: Category.GENERAL,
         name: ''
     });
     const [isSubEditing, setIsSubEditing] = useState(false);
@@ -87,7 +87,7 @@ const AdminDashboard: React.FC = () => {
             setSelectedFile(null);
             setPreviewUrl(null);
             setCurrentHandout({
-                category: Category.CONCURSOS,
+                category: Category.GENERAL,
                 pages: 0,
                 year: new Date().getFullYear(),
                 rating: 5.0
@@ -112,7 +112,7 @@ const AdminDashboard: React.FC = () => {
                 alert('Subcategoria criada!');
             }
             setIsSubEditing(false);
-            setCurrentSubCategory({ category: Category.CONCURSOS, name: '' });
+            setCurrentSubCategory({ category: Category.GENERAL, name: '' });
             loadData();
         } catch (error: any) {
             console.error(error);
@@ -352,7 +352,7 @@ const AdminDashboard: React.FC = () => {
                                             onClick={() => {
                                                 setIsEditing(false);
                                                 setCurrentHandout({
-                                                    category: Category.CONCURSOS,
+                                                    category: Category.GENERAL,
                                                     pages: 0,
                                                     year: new Date().getFullYear(),
                                                     rating: 5.0
@@ -478,7 +478,7 @@ const AdminDashboard: React.FC = () => {
                                             type="button"
                                             onClick={() => {
                                                 setIsSubEditing(false);
-                                                setCurrentSubCategory({ category: Category.CONCURSOS, name: '' });
+                                                setCurrentSubCategory({ category: Category.GENERAL, name: '' });
                                             }}
                                             className="px-6 py-3 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all"
                                         >
