@@ -73,8 +73,11 @@ const AdminDashboard: React.FC = () => {
 
             const handoutToSave = {
                 ...currentHandout,
+                category: currentHandout.category || Category.ADMINISTRACAO_GERAL,
                 thumbnail: thumbnailUrl
             };
+
+            console.log("Saving handout payload:", handoutToSave);
 
             if (currentHandout.id) {
                 await handoutService.updateHandout(currentHandout.id, handoutToSave);
@@ -108,7 +111,12 @@ const AdminDashboard: React.FC = () => {
                 await subcategoryService.updateSubCategory(currentSubCategory.id, currentSubCategory);
                 alert('Subcategoria atualizada!');
             } else {
-                await subcategoryService.createSubCategory(currentSubCategory as Omit<SubCategory, 'id'>);
+                const subCategoryToSave = {
+                    ...currentSubCategory,
+                    category: currentSubCategory.category || Category.ADMINISTRACAO_GERAL,
+                };
+                
+                await subcategoryService.createSubCategory(subCategoryToSave as Omit<SubCategory, 'id'>);
                 alert('Subcategoria criada!');
             }
             setIsSubEditing(false);
