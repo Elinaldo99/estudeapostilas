@@ -212,6 +212,16 @@ const Home: React.FC = () => {
     setCurrentPage(1);
   }, [selectedCategory, selectedSubCategory, searchQuery]);
 
+  const scrollToContent = () => {
+    const element = document.getElementById('conteudo-apostilas');
+    if (element) {
+      setTimeout(() => {
+        const y = element.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 50);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -277,6 +287,7 @@ const Home: React.FC = () => {
                           setExpandedCategory(cat as any);
                         }
                         setSelectedSubCategory('Todos');
+                        scrollToContent();
                       }}
                       className={`px-5 py-3.5 rounded-2xl text-sm text-left transition-all flex items-center justify-between group ${selectedCategory === cat
                         ? 'bg-indigo-600 text-white font-bold shadow-xl shadow-indigo-100'
@@ -304,7 +315,7 @@ const Home: React.FC = () => {
                     {expandedCategory === cat && cat !== 'Todos' && subcategories.filter(s => s.category === cat).length > 0 && (
                       <div className="mt-2 ml-4 pl-5 border-l-2 border-slate-100 flex flex-col gap-1 py-1 animate-in fade-in slide-in-from-top-2 duration-300">
                         <button
-                          onClick={() => setSelectedSubCategory('Todos')}
+                          onClick={() => { setSelectedSubCategory('Todos'); scrollToContent(); }}
                           className={`px-4 py-2.5 rounded-xl text-xs text-left transition-all ${selectedSubCategory === 'Todos'
                             ? 'text-indigo-600 font-bold bg-indigo-50 shadow-sm'
                             : 'text-slate-500 hover:bg-slate-50'
@@ -317,7 +328,7 @@ const Home: React.FC = () => {
                           .map(sub => (
                             <button
                               key={sub.id}
-                              onClick={() => setSelectedSubCategory(sub.id)}
+                              onClick={() => { setSelectedSubCategory(sub.id); scrollToContent(); }}
                               className={`px-4 py-2.5 rounded-xl text-xs text-left transition-all ${selectedSubCategory === sub.id
                                 ? 'text-indigo-600 font-bold bg-indigo-50 shadow-sm'
                                 : 'text-slate-500 hover:bg-slate-50'
@@ -352,7 +363,7 @@ const Home: React.FC = () => {
           </aside>
 
           {/* Handout Grid Area */}
-          <div className="flex-grow">
+          <div className="flex-grow" id="conteudo-apostilas">
             <section className="mb-12">
               <div className="flex justify-between items-center mb-10">
                 <h2 className="text-2xl font-bold text-slate-900">
