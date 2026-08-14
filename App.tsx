@@ -411,7 +411,7 @@ const Home: React.FC = () => {
                 <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
                   {/* Previous Button */}
                   <button
-                    onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); scrollToContent(); }}
                     disabled={currentPage === 1}
                     className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
@@ -435,7 +435,7 @@ const Home: React.FC = () => {
                       ) : (
                         <button
                           key={item}
-                          onClick={() => { setCurrentPage(item as number); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          onClick={() => { setCurrentPage(item as number); scrollToContent(); }}
                           className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${currentPage === item
                             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
                             : 'border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200'
@@ -449,7 +449,7 @@ const Home: React.FC = () => {
 
                   {/* Next Button */}
                   <button
-                    onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); scrollToContent(); }}
                     disabled={currentPage === totalPages}
                     className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
