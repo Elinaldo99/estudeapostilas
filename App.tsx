@@ -532,17 +532,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
               <div className="mt-auto flex flex-col sm:flex-row gap-3 md:gap-4">
-                <a
-                  href={activeHandout.downloadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-grow bg-indigo-600 text-white font-bold py-3 md:py-4 rounded-xl md:rounded-2xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 md:gap-3 shadow-lg shadow-indigo-100 text-sm md:text-base"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Baixar PDF
-                </a>
+
                 <button
                   onClick={() => setShowOnlineViewer(true)}
                   className="w-full sm:w-auto px-6 py-3 md:py-4 bg-slate-100 text-slate-700 font-bold rounded-xl md:rounded-2xl hover:bg-slate-200 transition-all text-sm md:text-base"
